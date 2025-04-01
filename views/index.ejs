@@ -49,6 +49,10 @@
         document.getElementById("EditSoTrang").value = soTrang;
         document.getElementById("EditNamXuatBan").value = namXuatBan;
       }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("NamXuatBan").setAttribute("max", new Date().getFullYear());
+      });
     </script>
   </head>
 
@@ -65,6 +69,7 @@
           <th>Chỉ số ISBN</th>
           <th>Số trang</th>
           <th>Năm xuất bản</th>
+          <th>Ảnh</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -87,6 +92,13 @@
           <td><%= item.SoTrang %></td>
           <td><%= item.NamXuatBan %></td>
           <td>
+            <% if (item.ImageURL) { %>
+              <img src="<%= item.ImageURL %>" alt="Bài báo" width="60" height="60">
+            <% } else { %>
+              <span>Không có ảnh</span>
+            <% } %>
+          </td>
+          <td>
             <form
               action="/delete"
               method="POST"
@@ -105,44 +117,57 @@
     <div class="forms-container">
         <div class="form-group">
             <h3>Thêm bài báo mới</h3>
-            <form action="/add" method="POST">
+            <form action="/add" method="POST" enctype="multipart/form-data">
                 <label for="TenBaiBao">Tên bài báo:</label>
-                <input type="text" id="TenBaiBao" name="TenBaiBao" required><br>
+                <input type="text" id="TenBaiBao" name="TenBaiBao" required 
+                pattern="^[\w\s\-]+$" title="Chỉ được chứa chữ, số, khoảng trắng, dấu gạch ngang hoặc gạch dưới"><br>
     
                 <label for="NhomTacGia">Tên nhóm tác giả:</label>
-                <input type="text" id="NhomTacGia" name="TenNhomTacGia" required><br>
+                <input type="text" id="NhomTacGia" name="TenNhomTacGia" required 
+                pattern="^[\w\s,.\-]+$" title="Chỉ được chứa chữ, số, dấu phẩy, khoảng trắng, dấu gạch ngang hoặc gạch dưới"><br>
     
                 <label for="ISBN">Chỉ số ISBN:</label>
-                <input type="text" id="ISBN" name="ISBN" required><br>
+                <input type="text" id="ISBN" name="ISBN" required pattern="^\d{4}-\d{4}-\d{4}$" 
+                title="ISBN phải theo định dạng 1111-2222-5555"><br>
     
                 <label for="SoTrang">Số trang:</label>
-                <input type="number" id="SoTrang" name="SoTrang" required><br>
+                <input type="number" id="SoTrang" name="SoTrang" required min="1" title="Chỉ nhập số nguyên dương"><br>
     
                 <label for="NamXuatBan">Năm xuất bản:</label>
-                <input type="number" id="NamXuatBan" name="NamXuatBan" required><br>
+                <input type="number" id="NamXuatBan" name="NamXuatBan" required min="1000" max="" title="Năm xuất bản phải có đúng 4 chữ số và không lớn hơn năm hiện tại"><br>
     
+                <label for="ImageFile">Chọn ảnh:</label>
+                <input type="file" id="ImageFile" name="ImageFile" accept="image/*" required><br>
+
                 <button type="submit">Thêm bài báo</button>
             </form>
         </div>
     
         <div class="form-group">
             <h3>Sửa bài báo</h3>
-            <form action="/update" method="POST">
+            <form action="/update" method="POST" enctype="multipart/form-data">
                 <label for="EditTenBaiBao">Tên bài báo:</label>
-                <input type="text" id="EditTenBaiBao" name="TenBaiBao" required><br>
+                <input type="text" id="EditTenBaiBao" name="TenBaiBao" required 
+                pattern="^[\w\s\-]+$" title="Chỉ được chứa chữ, số, khoảng trắng, dấu gạch ngang hoặc gạch dưới"><br>
     
                 <label for="EditNhomTacGia">Tên nhóm tác giả:</label>
-                <input type="text" id="EditNhomTacGia" name="TenNhomTacGia" required><br>
+                <input type="text" id="EditNhomTacGia" name="TenNhomTacGia" required
+                pattern="^[\w\s,.\-]+$" title="Chỉ được chứa chữ, số, dấu phẩy, khoảng trắng, dấu gạch ngang hoặc gạch dưới"><br>
     
                 <label for="EditISBN">Chỉ số ISBN:</label>
-                <input type="text" id="EditISBN" name="ISBN" readonly><br>
+                <input type="text" id="EditISBN" name="ISBN" required
+                pattern="^\d{4}-\d{4}-\d{4}$" 
+                title="ISBN phải theo định dạng 1111-2222-5555"><br>
     
                 <label for="EditSoTrang">Số trang:</label>
-                <input type="number" id="EditSoTrang" name="SoTrang" required><br>
+                <input type="number" id="EditSoTrang" name="SoTrang" required min="1" title="Chỉ nhập số nguyên dương"><br>
     
                 <label for="EditNamXuatBan">Năm xuất bản:</label>
-                <input type="number" id="EditNamXuatBan" name="NamXuatBan" required><br>
+                <input type="number" id="EditNamXuatBan" name="NamXuatBan" required min="1000" max="" title="Năm xuất bản phải có đúng 4 chữ số và không lớn hơn năm hiện tại"><br>
     
+                <label for="EditImageFile">Chọn ảnh mới (tùy chọn):</label>
+                <input type="file" id="EditImageFile" name="ImageFile" accept="image/*"><br>
+
                 <button type="submit">Sửa bài báo</button>
             </form>
         </div>
